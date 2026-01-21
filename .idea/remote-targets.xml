@@ -2,7 +2,7 @@
 <project version="4">
   <component name="RemoteTargetsManager">
     <targets>
-      <target name="WSL" type="wsl" uuid="a0acc5b3-c5ac-4d9f-9a1d-40ea733745dd">
+      <target name="WSL" type="wsl" uuid="f69c018c-2801-4a4e-af3a-84b0fd03e946">
         <config>
           <option name="distributionMsId" value="Ubuntu-24.04" />
         </config>
