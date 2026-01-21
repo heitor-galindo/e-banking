@@ -1,0 +1,121 @@
+{
+  "realm": "MsSecurity",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "Administrador do sistema"
+      },
+      {
+        "name": "USER",
+        "description": "Usuário padrão"
+      }
+    ],
+    "client": {
+      "ms-student": [
+        {
+          "name": "student.read",
+          "clientRole": true,
+          "composite": false
+        }
+      ],
+      "ms-reservation": []
+    }
+  },
+  "clients": [
+    {
+      "clientId": "gateway",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    },
+    {
+      "clientId": "ms-student",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    },
+    {
+      "clientId": "ms-reservation",
+      "secret": "123asd",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "enabled": true,
+      "username": "service-account-ms-reservation",
+      "serviceAccountClientId": "ms-reservation",
+      "clientRoles": {
+        "ms-student": [
+          "student.read"
+        ]
+      }
+    },
+    {
+      "username": "user",
+      "email": "user@gmail.com",
+      "firstName": "User",
+      "lastName": "User",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "firstName": "Admin",
+      "lastName": "Admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    }
+  ]
+}

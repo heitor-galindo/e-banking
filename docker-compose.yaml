@@ -1,0 +1,136 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.1
+    command:
+      - start-dev
+      - --import-realm
+      - --health-enabled=true
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: password
+      # Used when run the services out of docker
+      #      KC_HOSTNAME: localhost
+      #       Used when run the services with docker-compose
+      KC_HOSTNAME: keycloak
+      KC_HOSTNAME_STRICT: false
+      KC_LOG_LEVEL: WARN
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/realm:/opt/keycloak/data/import
+      - keycloak_data:/opt/keycloak/data
+    restart: always
+
+  kafka:
+    image: apache/kafka:4.1.1
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_LOG4J_LOGGER_KAFKA: WARN
+      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: EurekaServer
+    image: ghcr.io/heitor-galindo/eureka-server:3.0.0
+    ports:
+      - "8761:8761"
+    restart: on-failure
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: gateway
+    image: ghcr.io/heitor-galindo/gateway:3.0.0
+    environment:
+      EUREKA_HOST: http://eureka-server:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      SERVER_PORT: 8089
+      SPRING_PROFILES_ACTIVE: docker
+      LOG_LEVEL: INFO
+    ports:
+      - "8089:8089"
+    restart: on-failure
+
+  student-ms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: StudentMS
+    image: ghcr.io/heitor-galindo/student-ms:3.0.0
+    environment:
+      EUREKA_HOST: http://eureka-server:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
+      KAFKA_HOST: kafka:29092
+      SPRING_PROFILES_ACTIVE: docker
+      LOG_LEVEL: INFO
+      SERVER_PORT: 8084
+#    ports:
+#      - "8084:8084"
+    restart: on-failure
+    deploy:
+      replicas: 2
+
+  reservation-ms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: ReservationMS
+    image: ghcr.io/heitor-galindo/reservation-ms:3.0.0
+    environment:
+      EUREKA_HOST: http://eureka-server:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
+      MS_RESERVATION_CLIENT_SECRET: 123asd
+      KAFKA_HOST: kafka:29092
+      SERVER_PORT: 8086
+      SPRING_PROFILES_ACTIVE: docker
+#      STUDENT_MS_URL: http://student-ms:8084
+      LOG_LEVEL: INFO
+#    ports:
+#      - "8086:8086"
+    restart: on-failure
+    deploy:
+      replicas: 2
+
+  postgres:
+    image: postgres:18
+    container_name: postgres
+    environment:
+      POSTGRES_DB: msdb
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    restart: always
+
+volumes:
+  keycloak_data:
+  postgres_data:
+
