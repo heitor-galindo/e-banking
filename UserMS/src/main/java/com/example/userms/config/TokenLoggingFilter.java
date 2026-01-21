@@ -1,4 +1,4 @@
-package com.skistation.studentms.config;
+package com.example.userms.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

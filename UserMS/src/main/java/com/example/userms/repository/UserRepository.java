@@ -1,11 +1,11 @@
-package com.skistation.studentms.repository;
+package com.example.userms.repository;
 
-import com.skistation.studentms.entities.Student;
+import com.example.userms.entities.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/** The interface Student repository. */
+/** The interface User repository. */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
   /**
@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
    *
    * @return  the list
    */
-List<Student> findByReservationIdIsNotNull();
+  List<User> findByAccountIDIsNotNull();
 }

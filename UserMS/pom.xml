@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>com.skistation</groupId>
-    <artifactId>StudentMS</artifactId>
+    <artifactId>UserMS</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>StudentMS</name>
-    <description>StudentMS</description>
+    <name>UserMS</name>
+    <description>UserMS</description>
 
     <properties>
         <java.version>21</java.version>
@@ -123,6 +123,14 @@
     </dependencyManagement>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>db/migration/V1__create_student_tables.sql</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

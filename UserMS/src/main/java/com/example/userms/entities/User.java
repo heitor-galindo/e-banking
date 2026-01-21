@@ -1,4 +1,4 @@
-package com.example.studentms.entities;
+package com.example.userms.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +21,9 @@ public class User {
   private Long id;
 
   @NonNull private String firstName;
-  @NonNull private String school;
+  @NonNull private String surName;
+  @NonNull private String email;
   @NonNull private Integer age;
 
-  private Long reservationId;
+  private Long accountID;
 }

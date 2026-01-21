@@ -1,11 +1,11 @@
-package com.skistation.studentms;
+package com.example.userms;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/** The type Student ms application tests. */
+/** The type User ms application tests. */
 @SpringBootTest
-class StudentMsApplicationTests {
+class UserMsApplicationTests {
 
   /**
    * Context loads.

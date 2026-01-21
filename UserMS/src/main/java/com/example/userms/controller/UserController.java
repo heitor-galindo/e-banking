@@ -1,7 +1,7 @@
-package com.skistation.studentms.controller;
+package com.example.userms.controller;
 
-import com.skistation.studentms.entities.Student;
-import com.skistation.studentms.repository.StudentRepository;
+import com.example.userms.entities.User;
+import com.example.userms.repository.UserRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,60 +11,60 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * The type Student controller.
+ * The type User controller.
  */
 @Slf4j
 @RestController
-@RequestMapping(path = "/students")
-public class StudentController {
+@RequestMapping(path = "/users")
+public class UserController {
 
-  @Autowired private StudentRepository studentRepository;
+  @Autowired private UserRepository userRepository;
 
   /**
-   * Create student response entity.
+   * Create User response entity.
    *
-   * @param student the student
+   * @param User the User
    * @return  the response entity
    */
 @PostMapping
-  public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-    Student saved = studentRepository.save(student);
+  public ResponseEntity<User> createUser(@RequestBody User user) {
+    User saved = userRepository.save(user);
     return new ResponseEntity<>(saved, HttpStatus.CREATED);
   }
 
   /**
-   * Gets all students.
+   * Gets all Users.
    *
-   * @return  the all students
+   * @return  the all Users
    */
 @GetMapping("/all")
-  public ResponseEntity<List<Student>> getAllStudents() {
-    List<Student> students = studentRepository.findAll();
-    return new ResponseEntity<>(students, HttpStatus.OK);
+  public ResponseEntity<List<User>> getAllUsers() {
+    List<User> users = userRepository.findAll();
+    return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
   /**
-   * Gets students with reservations.
+   * Gets Users with reservations.
    *
-   * @return  the students with reservations
+   * @return  the Users with reservations
    */
-@GetMapping("/reservation")
-  @PreAuthorize("hasRole('STUDENT.READ')")
-  public ResponseEntity<List<Student>> getStudentsWithReservations() {
-    List<Student> students = studentRepository.findByReservationIdIsNotNull();
-    return new ResponseEntity<>(students, HttpStatus.OK);
+  @GetMapping("/account")
+  @PreAuthorize("hasRole('USER')")
+  public ResponseEntity<List<User>> getUsersWithAccounts() {
+    List<User> users = userRepository.findByAccountIDIsNotNull();
+    return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
   /**
-   * Gets student by id.
+   * Gets User by id.
    *
    * @param id the id
-   * @return  the student by id
+   * @return  the User by id
    */
 @GetMapping("/{id}")
-  @PreAuthorize("hasRole('STUDENT.READ')")
-  public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-    return studentRepository
+  @PreAuthorize("hasRole('USER')")
+  public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    return userRepository
         .findById(id)
         .map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.notFound().build());
