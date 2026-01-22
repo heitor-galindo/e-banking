@@ -18,19 +18,21 @@ public class UserController {
   @Autowired private UserRepository userRepository;
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<User> createUser(@RequestBody User user) {
     User saved = userRepository.save(user);
     return new ResponseEntity<>(saved, HttpStatus.CREATED);
   }
 
   @GetMapping("/all")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<User>> getAllUsers() {
     List<User> users = userRepository.findAll();
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
   @GetMapping("/account")
-  @PreAuthorize("hasRole('USER')")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<User>> getUsersWithAccounts() {
     List<User> users = userRepository.findByAccountIDIsNotNull();
     return new ResponseEntity<>(users, HttpStatus.OK);
