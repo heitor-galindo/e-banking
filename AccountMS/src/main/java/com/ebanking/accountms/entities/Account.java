@@ -24,10 +24,6 @@ public class Account {
   @Column(nullable = false)
   private String userId;
 
-  @Column(nullable = false)
-  @NonNull
-  private String userName;
-
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private AccountType accountType;

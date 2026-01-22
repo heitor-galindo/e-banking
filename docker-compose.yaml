@@ -1,4 +1,14 @@
 services:
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "9080:8080"
+    environment:
+      # Use dynamic configuration enabled via the UI
+      - DYNAMIC_CONFIG_ENABLED=true
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+
   keycloak:
     build:
       context: keycloak
@@ -11,9 +21,9 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       # Used when run the services out of docker
-      #      KC_HOSTNAME: localhost
+      KC_HOSTNAME: localhost
       #       Used when run the services with docker-compose
-      KC_HOSTNAME: keycloak
+#      KC_HOSTNAME: keycloak
       KC_HOSTNAME_STRICT: false
       KC_LOG_LEVEL: INFO
     ports:
@@ -21,6 +31,8 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
     restart: always
+    profiles:
+      - infra
 
   eureka:
     build:
@@ -32,6 +44,8 @@ services:
     ports:
       - "8761:8761"
     restart: on-failure
+    profiles:
+      - infra
 
   gateway:
     build:
@@ -50,6 +64,8 @@ services:
     ports:
       - "8089:8089"
     restart: on-failure
+    profiles:
+      - infra
 
   user-service:
     build:
@@ -68,6 +84,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       LOG_LEVEL: INFO
+      KAFKA_HOST: kafka:29092
       SERVER_PORT: 8086
       CLIENT_SECRET: 123asd
       CLIENT_ID: user-service
@@ -80,6 +97,8 @@ services:
     ports:
       - "8086:8086"
     restart: on-failure
+    profiles:
+      - service
 
   operation-service:
     build:
@@ -102,10 +121,13 @@ services:
       POSTGRES_DB: msdb
       POSTGRES_USER: msuser
       POSTGRES_PASSWORD: mspassword
+      KAFKA_HOST: kafka:29092
       POSTGRES_ADDRESS: operation-database:5432
     ports:
       - "8088:8088"
     restart: on-failure
+    profiles:
+      - service
 
   account-service:
     build:
@@ -123,6 +145,7 @@ services:
       CLIENT_RESOURCE_ID: user-client
       SPRING_PROFILES_ACTIVE: docker
       LOG_LEVEL: INFO
+      KAFKA_HOST: kafka:29092
       POSTGRES_DB: msdb
       POSTGRES_USER: msuser
       POSTGRES_PASSWORD: mspassword
@@ -130,6 +153,8 @@ services:
     ports:
       - "8084:8084"
     restart: on-failure
+    profiles:
+      - service
 
   kafka:
     image: apache/kafka:4.1.1
@@ -146,14 +171,16 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_NODE_ID: 1
-      KAFKA_LOG4J_LOGGER_KAFKA: WARN
-      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+      KAFKA_LOG4J_LOGGER_KAFKA: INFO
+      KAFKA_LOG4J_ROOT_LOGLEVEL: INFO
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
       KAFKA_LISTENERS: PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    profiles:
+      - infra
 
   user-database:
     image: postgres:18
@@ -166,6 +193,8 @@ services:
     volumes:
       - postgres_data_user:/var/lib/postgresql
     restart: always
+    profiles:
+      - database
 
   account-database:
     image: postgres:18
@@ -178,6 +207,8 @@ services:
     volumes:
       - postgres_data_account:/var/lib/postgresql
     restart: always
+    profiles:
+      - database
 
   operation-database:
     image: postgres:18
@@ -190,6 +221,8 @@ services:
     volumes:
       - postgres_data_operations:/var/lib/postgresql
     restart: always
+    profiles:
+      - database
 
 volumes:
   keycloak_data:
