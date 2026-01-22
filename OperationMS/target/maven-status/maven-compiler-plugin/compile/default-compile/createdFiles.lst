@@ -1,0 +1,6 @@
+com/skistation/reservationms/dto/StudentDTO.class
+com/skistation/reservationms/entities/Reservation.class
+com/skistation/reservationms/repository/ReservationRepository.class
+com/skistation/reservationms/ReservationMsApplication.class
+com/skistation/reservationms/controller/ReservationController.class
+com/skistation/reservationms/clients/StudentClient.class

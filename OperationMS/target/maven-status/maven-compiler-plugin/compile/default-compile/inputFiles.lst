@@ -1,0 +1,6 @@
+/home/heitor/alenia/microservices-lab/ReservationMS/src/main/java/com/skistation/reservationms/ReservationMsApplication.java
+/home/heitor/alenia/microservices-lab/ReservationMS/src/main/java/com/skistation/reservationms/clients/StudentClient.java
+/home/heitor/alenia/microservices-lab/ReservationMS/src/main/java/com/skistation/reservationms/controller/ReservationController.java
+/home/heitor/alenia/microservices-lab/ReservationMS/src/main/java/com/skistation/reservationms/dto/StudentDTO.java
+/home/heitor/alenia/microservices-lab/ReservationMS/src/main/java/com/skistation/reservationms/entities/Reservation.java
+/home/heitor/alenia/microservices-lab/ReservationMS/src/main/java/com/skistation/reservationms/repository/ReservationRepository.java
