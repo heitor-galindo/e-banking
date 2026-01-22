@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.stereotype.Component;
 
-/** The type Jwt converter. */
 @Component
 public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
   private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
@@ -46,7 +45,6 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
     return new JwtAuthenticationToken(jwt, authorities, getPrincipalName(jwt));
   }
 
-  /** Determine the principal name from JWT claims. */
   private String getPrincipalName(Jwt jwt) {
     if (principalAttribute != null && jwt.getClaim(principalAttribute) != null) {
       return jwt.getClaim(principalAttribute);
@@ -54,7 +52,6 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
     return jwt.getSubject(); // fallback to subject
   }
 
-  /** Extract roles assigned to the client/resource. */
   private Collection<GrantedAuthority> extractResourceRoles(Jwt jwt) {
     Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
 

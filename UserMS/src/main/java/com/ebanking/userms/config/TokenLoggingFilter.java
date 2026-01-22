@@ -10,7 +10,6 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/** The type Token logging filter. */
 @Slf4j
 @Component
 public class TokenLoggingFilter extends OncePerRequestFilter {
