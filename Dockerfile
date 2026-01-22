@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 COPY ${PROJECT_DIR}/src ./src
 
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn clean package -DskipTests
+    mvn clean package -Pdocker -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
 LABEL org.opencontainers.image.source=https://github.com/heitor-galindo/e-banking

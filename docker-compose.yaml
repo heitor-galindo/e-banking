@@ -21,9 +21,9 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       # Used when run the services out of docker
-      KC_HOSTNAME: localhost
+#      KC_HOSTNAME: localhost
       #       Used when run the services with docker-compose
-#      KC_HOSTNAME: keycloak
+      KC_HOSTNAME: keycloak
       KC_HOSTNAME_STRICT: false
       KC_LOG_LEVEL: INFO
     ports:

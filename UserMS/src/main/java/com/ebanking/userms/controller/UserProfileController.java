@@ -1,8 +1,11 @@
 package com.ebanking.userms.controller;
 
 import com.ebanking.userms.clients.AccountClient;
+import com.ebanking.userms.dto.CreateAccountRequestDTO;
 import com.ebanking.userms.dto.UserDTO;
 import com.ebanking.userms.entities.UserProfile;
+import com.ebanking.userms.enums.account.AccountType;
+import com.ebanking.userms.enums.account.Currency;
 import com.ebanking.userms.repository.UserProfileRepository;
 import com.ebanking.userms.service.KeycloakUserService;
 import java.util.List;
@@ -41,11 +44,9 @@ public class UserProfileController {
         keycloakService.createUser(
             request.getUserName(), request.getEmail(), request.getFullName(), request.getPhone());
 
-    Long accountId =
-        accountClient.createAccount(userProfile.getKeycloakId(), userProfile.getFullName());
-
-    log.info(
-        "New account created for user {} - account {}", userProfile.getKeycloakId(), accountId);
+    accountClient.createAccount(
+            new CreateAccountRequestDTO(
+                userProfile.getKeycloakId(), AccountType.SAVINGS, Currency.EUR));
 
     return ResponseEntity.ok(userProfile);
   }

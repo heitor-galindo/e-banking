@@ -20,7 +20,7 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
       new JwtGrantedAuthoritiesConverter();
 
   @Value("${jwt.auth.converter.principal-attribute}")
-  private String principleAttribute;
+  private String principalAttribute;
 
   @Value("${jwt.auth.converter.resource-id}")
   private String resourceId;
@@ -40,8 +40,8 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
   }
 
   private String getPrincipalName(Jwt jwt) {
-    if (principleAttribute != null && jwt.getClaim(principleAttribute) != null) {
-      return jwt.getClaim(principleAttribute);
+    if (principalAttribute != null && jwt.getClaim(principalAttribute) != null) {
+      return jwt.getClaim(principalAttribute);
     }
     return jwt.getSubject();
   }
