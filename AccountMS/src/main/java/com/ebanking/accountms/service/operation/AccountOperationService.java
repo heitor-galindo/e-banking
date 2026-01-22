@@ -38,7 +38,7 @@ public class AccountOperationService {
                     .userId(resolveUserId(req))
                     .sourceAccountId(req.getSourceAccount())
                     .destinationAccountId(req.getDestinationAccount())
-                    .comment("Operation completed successfully")
+                    .comment("Operation completed successfully | type=" + req.getTransactionType())
                     .build();
 
         } catch (Exception e) {
