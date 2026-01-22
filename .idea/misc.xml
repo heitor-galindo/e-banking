@@ -14,7 +14,14 @@
         <option value="$PROJECT_DIR$/StudentMS/pom.xml" />
         <option value="$PROJECT_DIR$/UserMS/pom.xml" />
         <option value="$PROJECT_DIR$/AccountMS/pom.xml" />
+        <option value="$PROJECT_DIR$/OperationMS/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/ReservationMS/pom.xml" />
+        <option value="$PROJECT_DIR$/StudentMS/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="temurin-25 (WSL)" project-jdk-type="JavaSDK">

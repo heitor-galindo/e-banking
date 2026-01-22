@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/AccountMS/src/main/resources/db/migration/V1__create_account_tables.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/UserMS/src/main/resources/db/migration/V1__create_user_profile_tables.sql" dialect="GenericSQL" />
   </component>
 </project>

@@ -16,6 +16,7 @@ RUN --mount=type=cache,target=/root/.m2 \
     mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
+LABEL org.opencontainers.image.source=https://github.com/heitor-galindo/e-banking
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]

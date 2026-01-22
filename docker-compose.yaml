@@ -1,6 +1,9 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:26.5.1
+    build:
+      context: keycloak
+      dockerfile: Dockerfile
+    image: ghcr.io/heitor-galindo/cap-keycloak:1.0.0
     command:
       - start-dev
       - --import-realm
@@ -16,7 +19,6 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./keycloak/realm:/opt/keycloak/data/import
       - keycloak_data:/opt/keycloak/data
     restart: always
 
@@ -26,7 +28,7 @@ services:
       dockerfile: Dockerfile
       args:
         PROJECT_DIR: EurekaServer
-    image: ghcr.io/heitor-galindo/eureka:3.0.0
+    image: ghcr.io/heitor-galindo/cap-eureka:1.0.0
     ports:
       - "8761:8761"
     restart: on-failure
@@ -37,7 +39,7 @@ services:
       dockerfile: Dockerfile
       args:
         PROJECT_DIR: gateway
-    image: ghcr.io/heitor-galindo/gateway:3.0.0
+    image: ghcr.io/heitor-galindo/cap-gateway:1.0.0
     environment:
       EUREKA_HOST: http://eureka:8761/eureka/
       KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
@@ -55,7 +57,7 @@ services:
       dockerfile: Dockerfile
       args:
         PROJECT_DIR: UserMS
-    image: ghcr.io/heitor-galindo/user-service:4.0.0
+    image: ghcr.io/heitor-galindo/cap-user-service:1.0.0
     environment:
       EUREKA_HOST: http://eureka:8761/eureka/
       KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
@@ -79,13 +81,39 @@ services:
       - "8086:8086"
     restart: on-failure
 
+  operation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: OperationMS
+    image: ghcr.io/heitor-galindo/cap-operation-service:1.0.0
+    environment:
+      EUREKA_HOST: http://eureka:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
+      SERVER_PORT: 8088
+      CLIENT_SECRET: 123asd
+      CLIENT_ID: user-service
+      APPLICATION_NAME: operation-service
+      CLIENT_RESOURCE_ID: user-client
+      SPRING_PROFILES_ACTIVE: docker
+      LOG_LEVEL: INFO
+      POSTGRES_DB: msdb
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+      POSTGRES_ADDRESS: operation-database:5432
+    ports:
+      - "8088:8088"
+    restart: on-failure
+
   account-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         PROJECT_DIR: AccountMS
-    image: ghcr.io/heitor-galindo/account-service:4.0.0
+    image: ghcr.io/heitor-galindo/cap-account-service:1.0.0
     environment:
       EUREKA_HOST: http://eureka:8761/eureka/
       KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
@@ -168,4 +196,3 @@ volumes:
   postgres_data_user:
   postgres_data_account:
   postgres_data_operations:
-
