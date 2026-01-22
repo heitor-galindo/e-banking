@@ -48,7 +48,7 @@ public class AccountOperationService {
                     .userId(resolveUserId(req))
                     .sourceAccountId(req.getSourceAccount())
                     .destinationAccountId(req.getDestinationAccount())
-                    .comment(e.getMessage())
+                    .comment(e.getMessage() + "| type=" + req.getTransactionType())
                     .build();
         }
     }
