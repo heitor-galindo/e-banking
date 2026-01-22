@@ -1,6 +1,8 @@
 package com.ebanking.userms.controller;
 
+import com.ebanking.userms.client.OperationProducer;
 import com.ebanking.userms.entities.User;
+import com.ebanking.userms.events.OperationEvent;
 import com.ebanking.userms.repository.UserRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   @Autowired private UserRepository userRepository;
+  @Autowired private OperationProducer operationProducer;
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
@@ -45,5 +48,12 @@ public class UserController {
         .findById(id)
         .map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/operation")
+  @PreAuthorize("hasRole('USER')")
+  public ResponseEntity<Void> performOperation(@RequestBody OperationEvent operationEvent) {
+    operationProducer.sendOperation(operationEvent);
+    return new ResponseEntity<>(HttpStatus.ACCEPTED);
   }
 }
