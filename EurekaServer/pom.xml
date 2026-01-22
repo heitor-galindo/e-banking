@@ -9,7 +9,7 @@
         <version>4.0.0</version>
     </parent>
 
-    <groupId>com.skistation</groupId>
+    <groupId>com.ebanking</groupId>
     <artifactId>EurekaServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>EurekaServer</name>
