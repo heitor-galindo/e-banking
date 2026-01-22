@@ -98,7 +98,7 @@ services:
       POSTGRES_DB: msdb
       POSTGRES_USER: msuser
       POSTGRES_PASSWORD: mspassword
-      POSTGRES_ADDRESS: postgres:5433
+      POSTGRES_ADDRESS: account-database:5432
     ports:
       - "8084:8084"
     restart: on-failure
@@ -136,7 +136,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data_user:/var/lib/postgresql
     restart: always
 
   account-database:
@@ -146,24 +146,26 @@ services:
       POSTGRES_USER: msuser
       POSTGRES_PASSWORD: mspassword
     ports:
-      - "5433:5433"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data_account:/var/lib/postgresql
     restart: always
 
-  transactions-database:
+  operation-database:
     image: postgres:18
     environment:
       POSTGRES_DB: msdb
       POSTGRES_USER: msuser
       POSTGRES_PASSWORD: mspassword
     ports:
-      - "5434:5434"
+      - "5436:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data_operations:/var/lib/postgresql
     restart: always
 
 volumes:
   keycloak_data:
-  postgres_data:
+  postgres_data_user:
+  postgres_data_account:
+  postgres_data_operations:
 
