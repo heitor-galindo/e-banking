@@ -1,4 +1,4 @@
-package com.example.userms;
+package com.ebanking.userms;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

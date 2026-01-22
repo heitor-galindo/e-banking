@@ -1,4 +1,4 @@
-package com.example.userms.config;
+package com.ebanking.userms.config;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;

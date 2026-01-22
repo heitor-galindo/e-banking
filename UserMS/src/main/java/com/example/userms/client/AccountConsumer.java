@@ -1,8 +1,8 @@
-package com.example.userms.client;
+package com.ebanking.userms.client;
 
-import com.example.userms.config.AccountEvent;
-import com.example.userms.entities.User;
-import com.example.userms.repository.UserRepository;
+import com.ebanking.userms.config.AccountEvent;
+import com.ebanking.userms.entities.User;
+import com.ebanking.userms.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

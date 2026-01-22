@@ -1,4 +1,4 @@
-package com.example.userms.config;
+package com.ebanking.userms.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.example.userms.config;
+package com.ebanking.userms.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

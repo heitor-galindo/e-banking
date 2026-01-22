@@ -1,7 +1,7 @@
-package com.example.userms.controller;
+package com.ebanking.userms.controller;
 
-import com.example.userms.entities.User;
-import com.example.userms.repository.UserRepository;
+import com.ebanking.userms.entities.User;
+import com.ebanking.userms.repository.UserRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
