@@ -1,15 +1,20 @@
 package com.ebanking.accountms.entities;
 
+import com.ebanking.accountms.enums.account.AccountStatus;
+import com.ebanking.accountms.enums.account.AccountType;
+import com.ebanking.accountms.enums.account.Currency;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
-@Setter
 @Getter
-@ToString
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Account {
 
   @Id
@@ -17,10 +22,46 @@ public class Account {
   private Long id;
 
   @Column(nullable = false)
-  @NonNull
   private String userId;
 
   @Column(nullable = false)
   @NonNull
   private String userName;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private AccountType accountType;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Currency currency;
+
+  /**
+   * Current balance of the account
+   */
+  @Column(nullable = false, precision = 19, scale = 2)
+  private BigDecimal balance;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private AccountStatus status;
+
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdAt;
+
+  private LocalDateTime updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+    if (this.balance == null) {
+      this.balance = BigDecimal.ZERO;
+    }
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    this.updatedAt = LocalDateTime.now();
+  }
 }
