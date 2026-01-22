@@ -1,110 +1,62 @@
 {
   "realm": "MsSecurity",
   "enabled": true,
+  "sslRequired": "none",
+
   "roles": {
     "realm": [
       {
         "name": "ADMIN",
-        "description": "Administrador do sistema"
+        "description": "Administrator of Account system"
       },
       {
         "name": "USER",
-        "description": "Usuário padrão"
+        "description": "Standard account user"
       }
-    ],
-    "client": {
-      "ms-student": [
-        {
-          "name": "student.read",
-          "clientRole": true,
-          "composite": false
-        }
-      ],
-      "ms-reservation": []
-    }
+    ]
   },
+
   "clients": [
+    {
+      "clientId": "account-service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    },
     {
       "clientId": "gateway",
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
+      "serviceAccountsEnabled": false,
       "clientAuthenticatorType": "client-secret",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": true,
-      "serviceAccountsEnabled": true,
-      "redirectUris": [
-        "*"
-      ],
-      "webOrigins": [
-        "*"
-      ]
-    },
-    {
-      "clientId": "ms-student",
-      "enabled": true,
-      "protocol": "openid-connect",
-      "publicClient": false,
-      "clientAuthenticatorType": "client-secret",
-      "standardFlowEnabled": true,
-      "serviceAccountsEnabled": true,
-      "redirectUris": [
-        "*"
-      ],
-      "webOrigins": [
-        "*"
-      ]
-    },
-    {
-      "clientId": "ms-reservation",
-      "secret": "123asd",
-      "enabled": true,
-      "protocol": "openid-connect",
-      "publicClient": false,
-      "clientAuthenticatorType": "client-secret",
-      "standardFlowEnabled": true,
-      "serviceAccountsEnabled": true,
-      "redirectUris": [
-        "*"
-      ],
-      "webOrigins": [
-        "*"
-      ]
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
     }
   ],
+
   "users": [
     {
+      "username": "service-account-account-service",
       "enabled": true,
-      "username": "service-account-ms-reservation",
-      "serviceAccountClientId": "ms-reservation",
-      "clientRoles": {
-        "ms-student": [
-          "student.read"
-        ]
-      }
-    },
-    {
-      "username": "user",
-      "email": "user@gmail.com",
-      "firstName": "User",
-      "lastName": "User",
-      "enabled": true,
-      "credentials": [
-        {
-          "type": "password",
-          "value": "user",
-          "temporary": false
-        }
-      ],
+      "serviceAccountClientId": "account-service",
       "realmRoles": [
-        "USER"
+        "ADMIN"
       ]
     },
     {
       "username": "admin",
-      "email": "admin@gmail.com",
+      "email": "admin@bank.com",
       "firstName": "Admin",
-      "lastName": "Admin",
+      "lastName": "Account",
       "enabled": true,
       "credentials": [
         {
@@ -115,6 +67,23 @@
       ],
       "realmRoles": [
         "ADMIN"
+      ]
+    },
+    {
+      "username": "user",
+      "email": "user@bank.com",
+      "firstName": "User",
+      "lastName": "Account",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
       ]
     }
   ]
