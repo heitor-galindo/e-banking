@@ -12,6 +12,8 @@
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/ReservationMS/pom.xml" />
         <option value="$PROJECT_DIR$/StudentMS/pom.xml" />
+        <option value="$PROJECT_DIR$/UserMS/pom.xml" />
+        <option value="$PROJECT_DIR$/AccountMS/pom.xml" />
       </list>
     </option>
   </component>

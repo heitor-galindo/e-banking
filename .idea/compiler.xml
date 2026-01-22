@@ -19,27 +19,31 @@
         </processorPath>
         <module name="ReservationMS" />
       </profile>
-      <profile name="Annotation profile for UserMS" enabled="true">
+      <profile name="Annotation profile for UserMs" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="/home/heitor/.m2/repository/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
+        <module name="AccountMS" />
         <module name="StudentMS" />
-        <module name="UserMS" />
+        <module name="UserMs" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ReservationMS (1)" target="21" />
+      <module name="UserMS" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AccountMS" options="-parameters" />
       <module name="EurekaServer" options="-parameters" />
       <module name="ReservationMS" options="-parameters" />
       <module name="StudentMS" options="-parameters" />
       <module name="UserMS" options="-parameters" />
+      <module name="UserMs" options="-parameters" />
       <module name="gateway" options="-parameters" />
     </option>
   </component>

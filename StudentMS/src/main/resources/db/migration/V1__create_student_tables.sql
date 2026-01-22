@@ -1,8 +1,8 @@
 CREATE TABLE student
 (
-    id             BIGSERIAL PRIMARY KEY,
-    first_name     TEXT    NOT NULL,
-    school         TEXT    NOT NULL,
-    age            INTEGER NOT NULL,
-    reservation_id BIGINT
+    KEYCLOAKID TEXT NOT NULL,
+    USERNAME   TEXT NOT NULL,
+    FULLNAME   TEXT NOT NULL,
+    EMAIL      TEXT NOT NULL,
+    PHONE      TEXT NOT NULL
 );

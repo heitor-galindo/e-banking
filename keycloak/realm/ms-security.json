@@ -4,28 +4,31 @@
   "roles": {
     "realm": [
       {
-        "name": "ADMIN",
-        "description": "Administrador do sistema"
+        "name": "ADMIN"
       },
       {
-        "name": "USER",
-        "description": "Usuário padrão"
+        "name": "USER"
       }
     ],
     "client": {
-      "ms-student": [
+      "user-service": [
         {
-          "name": "student.read",
-          "clientRole": true,
-          "composite": false
+          "name": "create.user",
+          "clientRole": true
         }
       ],
-      "ms-reservation": []
+      "account-service": [
+        {
+          "name": "create.account",
+          "clientRole": true
+        }
+      ]
     }
   },
   "clients": [
     {
       "clientId": "gateway",
+      "secret": "123asd",
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
@@ -41,7 +44,8 @@
       ]
     },
     {
-      "clientId": "ms-student",
+      "clientId": "user-service",
+      "secret": "123asd",
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
@@ -56,7 +60,7 @@
       ]
     },
     {
-      "clientId": "ms-reservation",
+      "clientId": "account-service",
       "secret": "123asd",
       "enabled": true,
       "protocol": "openid-connect",
@@ -75,30 +79,13 @@
   "users": [
     {
       "enabled": true,
-      "username": "service-account-ms-reservation",
-      "serviceAccountClientId": "ms-reservation",
+      "username": "service-account-ms-user",
+      "serviceAccountClientId": "account-service",
       "clientRoles": {
-        "ms-student": [
-          "student.read"
+        "account-service": [
+          "create.account"
         ]
       }
-    },
-    {
-      "username": "user",
-      "email": "user@gmail.com",
-      "firstName": "User",
-      "lastName": "User",
-      "enabled": true,
-      "credentials": [
-        {
-          "type": "password",
-          "value": "user",
-          "temporary": false
-        }
-      ],
-      "realmRoles": [
-        "USER"
-      ]
     },
     {
       "username": "admin",

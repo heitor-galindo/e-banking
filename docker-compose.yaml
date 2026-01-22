@@ -4,22 +4,104 @@ services:
     command:
       - start-dev
       - --import-realm
-      - --health-enabled=true
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       # Used when run the services out of docker
       #      KC_HOSTNAME: localhost
       #       Used when run the services with docker-compose
       KC_HOSTNAME: keycloak
       KC_HOSTNAME_STRICT: false
-      KC_LOG_LEVEL: WARN
+      KC_LOG_LEVEL: INFO
     ports:
       - "8080:8080"
     volumes:
       - ./keycloak/realm:/opt/keycloak/data/import
       - keycloak_data:/opt/keycloak/data
     restart: always
+
+  eureka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: EurekaServer
+    image: ghcr.io/heitor-galindo/eureka:3.0.0
+    ports:
+      - "8761:8761"
+    restart: on-failure
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: gateway
+    image: ghcr.io/heitor-galindo/gateway:3.0.0
+    environment:
+      EUREKA_HOST: http://eureka:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      SERVER_PORT: 8089
+      SPRING_PROFILES_ACTIVE: docker
+      LOG_LEVEL: INFO
+      RESOURCE_ID: gateway
+    ports:
+      - "8089:8089"
+    restart: on-failure
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: UserMS
+    image: ghcr.io/heitor-galindo/user-service:4.0.0
+    environment:
+      EUREKA_HOST: http://eureka:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
+      KEYCLOAK_ADDRESS: http://keycloak:8080/
+      SPRING_PROFILES_ACTIVE: docker
+      KEYCLOAK_REALM: MsSecurity
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      LOG_LEVEL: INFO
+      SERVER_PORT: 8086
+      CLIENT_SECRET: 123asd
+      CLIENT_ID: user-service
+      APPLICATION_NAME: user-service
+      CLIENT_RESOURCE_ID: user-client
+      POSTGRES_DB: msdb
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+      POSTGRES_ADDRESS: user-database:5432
+    ports:
+      - "8086:8086"
+    restart: on-failure
+
+  account-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: AccountMS
+    image: ghcr.io/heitor-galindo/account-service:4.0.0
+    environment:
+      EUREKA_HOST: http://eureka:8761/eureka/
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
+      SERVER_PORT: 8084
+      APPLICATION_NAME: account-service
+      CLIENT_RESOURCE_ID: user-client
+      SPRING_PROFILES_ACTIVE: docker
+      LOG_LEVEL: INFO
+      POSTGRES_DB: msdb
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+      POSTGRES_ADDRESS: postgres:5433
+    ports:
+      - "8084:8084"
+    restart: on-failure
 
   kafka:
     image: apache/kafka:4.1.1
@@ -45,87 +127,38 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
 
-  eureka-server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PROJECT_DIR: EurekaServer
-    image: ghcr.io/heitor-galindo/eureka-server:3.0.0
-    ports:
-      - "8761:8761"
-    restart: on-failure
-
-  gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PROJECT_DIR: gateway
-    image: ghcr.io/heitor-galindo/gateway:3.0.0
-    environment:
-      EUREKA_HOST: http://eureka-server:8761/eureka/
-      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
-      SERVER_PORT: 8089
-      SPRING_PROFILES_ACTIVE: docker
-      LOG_LEVEL: INFO
-    ports:
-      - "8089:8089"
-    restart: on-failure
-
-  student-ms:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PROJECT_DIR: StudentMS
-    image: ghcr.io/heitor-galindo/student-ms:3.0.0
-    environment:
-      EUREKA_HOST: http://eureka-server:8761/eureka/
-      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
-      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
-      KAFKA_HOST: kafka:29092
-      SPRING_PROFILES_ACTIVE: docker
-      LOG_LEVEL: INFO
-      SERVER_PORT: 8084
-#    ports:
-#      - "8084:8084"
-    restart: on-failure
-    deploy:
-      replicas: 2
-
-  reservation-ms:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PROJECT_DIR: ReservationMS
-    image: ghcr.io/heitor-galindo/reservation-ms:3.0.0
-    environment:
-      EUREKA_HOST: http://eureka-server:8761/eureka/
-      KEYCLOAK_ISSUER: http://keycloak:8080/realms/MsSecurity
-      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/MsSecurity/protocol/openid-connect/token
-      MS_RESERVATION_CLIENT_SECRET: 123asd
-      KAFKA_HOST: kafka:29092
-      SERVER_PORT: 8086
-      SPRING_PROFILES_ACTIVE: docker
-#      STUDENT_MS_URL: http://student-ms:8084
-      LOG_LEVEL: INFO
-#    ports:
-#      - "8086:8086"
-    restart: on-failure
-    deploy:
-      replicas: 2
-
-  postgres:
+  user-database:
     image: postgres:18
-    container_name: postgres
     environment:
       POSTGRES_DB: msdb
       POSTGRES_USER: msuser
       POSTGRES_PASSWORD: mspassword
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    restart: always
+
+  account-database:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: msdb
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+    ports:
+      - "5433:5433"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    restart: always
+
+  transactions-database:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: msdb
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+    ports:
+      - "5434:5434"
     volumes:
       - postgres_data:/var/lib/postgresql
     restart: always
